@@ -5,6 +5,7 @@ const port = 3000
 connectToMongo()
 
 app.use(express.json())
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // Available Routes
