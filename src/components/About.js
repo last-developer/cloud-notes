@@ -1,9 +1,12 @@
 import React from 'react'
 
 const About = () => {
+  
   return (
     <>
-    <h1>im about page</h1>
+    <section className='about'>
+    <h1 >im about page </h1>
+    </section>
     </>
   )
 }

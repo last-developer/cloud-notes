@@ -1,0 +1,139 @@
+/* Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* CSS Reset */
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    list-style: none;
+    /* transition: .2s linear; */
+}
+
+a {
+    color: inherit;
+    display: inline-block;
+}
+
+/* :root {
+    --main-color: #d3ad7f;
+} */
+
+/* ---------- For Element in CENTER ---------
+
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%); 
+
+*/
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 3.5rem;
+}
+
+body {
+    /* background: #000000fc; */
+    min-width: 300px;
+}
+
+section {
+    padding: 2rem 7%;
+}
+
+img,
+picture,
+svg,
+video {
+    display: block;
+    max-width: 100%;
+}
+
+
+/* header */
+header{
+    padding: 2rem 7%;
+    /* color: white; */
+}
+
+/* .about{
+    color: white;
+} */
+
+
+.active{
+    color: aqua;
+
+}
+
+.logo.active{
+    color: black;
+}
+
+
+.note{
+    border: 1px solid rgb(43, 43, 43);
+    padding-left: 10px;
+}
+
+.icons{
+    display: flex;
+    gap: 1rem;
+    padding: .5rem 0rem;
+}
+.icons i{
+    cursor: pointer;
+}
+
+.alert{
+    background-color: aqua;
+    padding: 0rem 7%;
+}
+
+
+
+
+
+
+
+
+/* hamburger-menu */
+.hamburger-menu {
+    display: none;
+}
+
+/* media queries  */
+@media (max-width:1050px) {
+
+    html {
+        font-size: 80%;
+    }
+
+    section {
+        padding: 2rem;
+    }
+
+
+}
+
+
+@media (max-width:750px) {
+    .hamburger-menu {
+        display: inline-block;
+    }
+
+
+
+
+}
+
+@media (max-width:450px) {
+
+    html {
+        font-size: 75%;
+    }
+}
