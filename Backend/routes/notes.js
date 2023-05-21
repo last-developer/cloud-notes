@@ -6,8 +6,14 @@ const { body, validationResult, ValidationChain } = require('express-validator')
 
 // Router 1: get all notes using :get "/api/notes/fetchallnotes/"
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
-    const notes = await Note.find({ user: req.user.id })
-    res.json(notes)
+    try {
+        const notes = await Note.find({ user: req.user.id })
+        res.json(notes)
+    } 
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
 // Router 2: add a new note using :post "/api/notes/addnote/"
@@ -29,13 +35,14 @@ router.post('/newnote', fetchuser, [
 
     } catch (error) {
         console.error(error)
+        res.status(500).send("Internal Server Error");
     }
 })
 
 // Router 3: update note using :put "/api/notes/updatenote/"
-router.put('/updatenote/:id', async (req, res) => {
+router.put('/updatenote/:id', fetchuser,async (req, res) => {
+    const { title, description, tag } = req.body;
     try {
-        const { title, description, tag } = req.body;
         // create a new Note 
         const newNote = {}
         if (title) {
@@ -53,33 +60,36 @@ router.put('/updatenote/:id', async (req, res) => {
         if (!note) {
             return res.status(404).send("Not Found")
         }
-        // if (note.user.toString() !== req.user.id) {
-        //     return res.status(401).send("Not Found")
-        // }
+        // comment 2 lines
+        if (note.user.toString() !== req.user.id) {
+            return res.status(401).send("Not Found")
+        }
         note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true })
         res.json({ note });
 
     } catch (error) {
-        console.error(error)
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
     }
 })
 
 // Router 4: delete note using :delete "/api/notes/deletenote/"
-router.delete('/deletenote/:id', async (req, res) => {
+router.delete('/deletenote/:id',fetchuser, async (req, res) => {
     try {
         // find note
         let note = await Note.findById(req.params.id);
         if (!note) {
             return res.status(404).send("Not Found")
         }
-        // if (note.user.toString() !== req.user.id) {
-        //     return res.status(401).send("Not Found")
-        // }
+        if (note.user.toString() !== req.user.id) {
+            return res.status(401).send("Not Found")
+        }
         note = await Note.findByIdAndDelete(req.params.id)
-        res.json({"success":"Note has been deleted"});
+        res.json({"success":"Note has been deleted",note:note});
 
     } catch (error) {
-        console.error(error)
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
     }
 })
 

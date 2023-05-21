@@ -26,27 +26,35 @@ const validate = validations => {
 
 // Router 1: create a user using :post "/api/auth/createuser/"
 router.post('/createuser', validate([
-    body('name').isLength({ min: 3 }),
+    body('name').isLength({ min: 5 }),
     body('email').isEmail(),
     body('password').isLength({ min: 5 }),
 ]), async (req, res) => {
+    // let success=false;
     try {
+        let user=await User.findOne({email:req.body.email});
+        if (user) {
+            return res.status(400).json({ success,error: 'Already Registerd' })
+        }
         const salt = await bcrypt.genSalt(10)
         const secPass = await bcrypt.hash(req.body.password, salt)
-        const user = await User.create({
+        user = await User.create({
             name: req.body.name,
             email: req.body.email,
-            password: secPass
+            password: secPass,
         });
+        
         const data = {
             user: {
                 id: user.id
             }
         }
         const authToken = jwt.sign(data, JWTSecret)
+        // success=true;
         res.json({ authToken });
     } catch (err) {
         console.error(err.message);
+        res.status(500).send("Internal Server Error");
     }
 })
 
@@ -55,27 +63,31 @@ router.post('/login', validate([
     body('email').isEmail(),
     body('password', 'Must be 5 characters long').isLength({ min: 5 }),
 ]), async (req, res) => {
+    let success=false;
     const { email, password } = req.body
     try {
         let user = await User.findOne({ email })
         if (!user) {
-            return res.status(400).json({ error: 'Please login with valid credentials' })
+            return res.status(400).json({ success,error: 'Please login with valid credentials' })
         }
 
         const passwordCompare = await bcrypt.compare(password, user.password)
         if (!passwordCompare) {
-            return res.status(400).json({ error: 'Please login with valid credentials' })
+            return res.status(400).json({ success,error: 'Please login with valid credentials' })
         }
         const data = {
             user: {
                 id: user.id
             }
         }
-        const authToken = jwt.sign(data, JWTSecret)
-        res.json({ authToken });
+        const authToken = jwt.sign(data, JWTSecret);
+        success=true;
+        res.json({ success,authToken });
 
     } catch (err) {
         console.error(err.message);
+        res.status(500).send("Internal Server Error");
+
     }
 })
 
@@ -89,6 +101,7 @@ router.post('/getuser', fetchuser, async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
+        res.status(500).send("Internal Server Error");
     }
 })
 
